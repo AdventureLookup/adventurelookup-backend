@@ -11,6 +11,9 @@ on a native Linux platform, you can download the two tools indidivually
 [here](https://docs.docker.com/compose/install/) and
 [here](https://docs.docker.com/machine/install-machine/).
 
+The package comes with a default `dev.env` that can be copied/renamed to `.env`
+and used as-is.
+
 Once you have the tools installed follow these steps:
 
 1. Create a virtual machine to host the containers:
