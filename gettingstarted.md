@@ -46,9 +46,17 @@ Once you have the tools installed follow these steps:
 
         docker-compose down
 
-You now have the base setup up and running. However, no database tables or
-content has been setup and the static files have not been collected. We'll do
-this now:
+6. To visit the site, find the virtual machine IP and enter it in your browser:
+
+        docker-machine ip dev
+
+        // -> Go to the output IP address in your browser
+
+You now have the base setup up and running. The application will auto-reload
+when code changes, so you can see your changes live.
+
+However, no database tables or content has been setup and the static files have
+not been collected. We'll do this now:
 
 > On Windows, using `docker-compose run` allows only for non-interactive mode
 > mandated by the `-d` flag. If you want to see the output of your commands
