@@ -42,6 +42,10 @@ Once you have the tools installed follow these steps:
    > run it in the foreground (handy to get direct log output), omit the -d
    > To get log output otherwise, run `docker-compose logs`
 
+5. To stop the virtual machines again, run:
+
+        docker-compose down
+
 You now have the base setup up and running. However, no database tables or
 content has been setup and the static files have not been collected. We'll do
 this now:
