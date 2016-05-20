@@ -1,0 +1,32 @@
+web:
+  restart: always
+  build: ./web
+  ports:
+    - "8000:8000"
+  links:
+    - postgres:postgres
+  volumes:
+    - ./web/:/usr/src/app
+    - ./web/static/:/usr/src/app/static
+  env_file: .env
+  command:  /usr/local/bin/gunicorn adventurelookup.wsgi:application -w 2 -b :8000 --reload
+
+nginx:
+  restart: always
+  build: ./nginx
+  ports:
+    - "80:80"
+  volumes:
+    - /www/static
+  volumes_from:
+    - web
+  links:
+    - web:web
+
+postgres:
+  restart: always
+  image: postgres:9.5
+  ports:
+    - "5432:5432"
+  volumes:
+    - pgdata:/var/lib/postgresql/data

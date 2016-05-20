@@ -1,0 +1,3 @@
+# Don't include gathered static files - DO NOT PUT ANYTHING PERMANENT HERE
+*
+!.gitignore
