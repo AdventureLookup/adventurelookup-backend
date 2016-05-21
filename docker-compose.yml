@@ -3,8 +3,6 @@ services:
   web:
     restart: always
     build: ./web
-    ports:
-      - "8000:8000"
     links:
       - postgres:postgres
     volumes:
@@ -27,8 +25,6 @@ services:
   postgres:
     image: postgres
     restart: always
-    ports:
-      - "5432:5432"
     volumes:
       - $DATA_DIR/postgres:/var/lib/postgresql/data
     environment:
