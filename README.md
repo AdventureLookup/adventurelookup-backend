@@ -11,12 +11,12 @@ The development environment makes use of Docker and two associated tools:
 
 If you are using OS X or Windows, you will need the
 [Docker Toolbox](https://www.docker.com/products/docker-toolbox). If you are
-on a native Linux platform, you can download the two tools indidivually
+on a native Linux platform, you can download the two tools individually
 [here](https://docs.docker.com/compose/install/) and
 [here](https://docs.docker.com/machine/install-machine/).
 
-The package comes with a default `dev.env` that can be copied/renamed to `.env`
-and used as-is.
+## Env
+There is an `.env` file where you can tweak the settings for the project. (Recommended for production)
 
 Once you have the tools installed follow these steps:
 
@@ -73,17 +73,17 @@ not been collected. We'll do this now:
 
 1. Run migrations to set up the database structure:
 
-        docker-compose run -d web python manage.py migrate
+        docker-compose run --rm web python manage.py migrate
 
 2. Add the initial superuser:
 
-        docker-compose run -d web python initial_setup.py
+        docker-compose run --rm web python initial_setup.py
 
    > This will setup the default superuser `admin` with the password `admin`.
    > You can alter `initial_setup.py` if you would like a different setting.
 
 3. Collect all the static files to serve in one central folder:
 
-        docker-compose run -d web python manage.py collectstatic --noinput
+        docker-compose run --rm web python manage.py collectstatic --noinput
 
 Once all of this is done, you should be up and running.
