@@ -40,7 +40,7 @@ Once you have the tools installed follow these steps:
 
 4. Start the virtual machines:
 
-        docker-compose up -d
+        docker-compose -f docker-compose.yml -f dev.yml up -d
 
    > The `-d` flag means we'll be running it as a daemon. If you want to
    > run it in the foreground (handy to get direct log output), omit the -d
