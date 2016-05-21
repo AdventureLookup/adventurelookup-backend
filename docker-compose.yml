@@ -1,32 +1,41 @@
-web:
-  restart: always
-  build: ./web
-  ports:
-    - "8000:8000"
-  links:
-    - postgres:postgres
-  volumes:
-    - ./web/:/usr/src/app
-    - ./web/static/:/usr/src/app/static
-  env_file: .env
-  command:  /usr/local/bin/gunicorn adventurelookup.wsgi:application -w 2 -b :8000 --reload
+version: "2"
+services:
+  web:
+    restart: always
+    build: ./web
+    ports:
+      - "8000:8000"
+    links:
+      - postgres:postgres
+    volumes:
+      - ./web/:/app
+      - static:/app/static
+    env_file: .env
 
-nginx:
-  restart: always
-  build: ./nginx
-  ports:
-    - "80:80"
-  volumes:
-    - /www/static
-  volumes_from:
-    - web
-  links:
-    - web:web
+  nginx:
+    restart: always
+    image: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - static:/usr/share/nginx/html:ro
+      - ./nginx/adventurelookup.conf:/etc/nginx/conf.d/adventurelookup.conf:ro
+    links:
+      - web:web
 
-postgres:
-  restart: always
-  image: postgres:9.5
-  ports:
-    - "5432:5432"
-  volumes:
-    - pgdata:/var/lib/postgresql/data
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - $DATA_DIR/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=$DB_PASS
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_DB=$DB_NAME
+
+volumes:
+  static:
+    driver: local
