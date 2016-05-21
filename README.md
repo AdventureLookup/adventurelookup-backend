@@ -34,11 +34,7 @@ Once you have the tools installed follow these steps:
         // OS X / Linux
         eval $(docker-machine env dev)
 
-3. Build the virtual machines from the base images (takes a while):
-
-        docker-compose build
-
-4. Start the virtual machines:
+3. Start the containers:
 
         docker-compose -f docker-compose.yml -f dev.yml up -d
 
@@ -46,11 +42,11 @@ Once you have the tools installed follow these steps:
    > run it in the foreground (handy to get direct log output), omit the -d
    > To get log output otherwise, run `docker-compose logs`
 
-5. To stop the virtual machines again, run:
+4. To stop the containers, run:
 
         docker-compose down
 
-6. To visit the site, find the virtual machine IP and enter it in your browser:
+5. To visit the site, find the virtual machine IP and enter it in your browser:
 
         docker-machine ip dev
 
@@ -66,24 +62,24 @@ not been collected. We'll do this now:
 > mandated by the `-d` flag. If you want to see the output of your commands
 > (without running the log command), you can do run the following command:
 >
-> `docker exec <container> <command>`
->
-> Note that the container is the full name of the container, in my case it is
-> `adventurelookupbackend_web_1`.
+> `docker exec adventure-lookup_web_1 <command>`
+
+> On OS X/Linux it is recommended to change the `-d` option to `--rm`.
+> It'll output the logs to stdout and remove the one-off containers after executing the commands to avoid clutter.
 
 1. Run migrations to set up the database structure:
 
-        docker-compose run --rm web python manage.py migrate
+        docker-compose run -d web python manage.py migrate
 
 2. Add the initial superuser:
 
-        docker-compose run --rm web python initial_setup.py
+        docker-compose run -d web python initial_setup.py
 
    > This will setup the default superuser `admin` with the password `admin`.
    > You can alter `initial_setup.py` if you would like a different setting.
 
 3. Collect all the static files to serve in one central folder:
 
-        docker-compose run --rm web python manage.py collectstatic --noinput
+        docker-compose run -d web python manage.py collectstatic --noinput
 
 Once all of this is done, you should be up and running.
