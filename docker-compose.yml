@@ -19,7 +19,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - static:/usr/share/nginx/html:ro
+      - static:/www/static:ro
       - ./nginx/adventurelookup.conf:/etc/nginx/conf.d/adventurelookup.conf:ro
     links:
       - web:web
