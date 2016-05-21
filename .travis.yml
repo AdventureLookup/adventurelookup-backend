@@ -1,0 +1,22 @@
+language: python
+
+python:
+  - 2.7
+  - 3.5
+
+services:
+  - docker
+
+env:
+  DOCKER_COMPOSE_VERSION: 1.7.1
+
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - sudo apt-get update
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
+
+script:
+  - docker-compose -f docker-compose.yml up -d 
