@@ -6,9 +6,7 @@ ENV DJANGO_PROJECT_NAME=adventurelookup
 RUN apt-get update && apt-get install --no-install-recommends -y \
 		gcc \
 		gettext \
-		mysql-client libmysqlclient-dev \
 		postgresql-client libpq-dev \
-		sqlite3 \
 	&& apt-get clean
 
 VOLUME /app
