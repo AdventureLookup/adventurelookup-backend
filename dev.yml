@@ -5,6 +5,7 @@ services:
       - "8000:8000"
     environment:
       - DEBUG=True
+    command: /usr/local/bin/gunicorn adventurelookup.wsgi:application --workers 2 --forwarded-allow-ips="*" --bind 0.0.0.0:8000 --reload
 
   postgres:
     ports:

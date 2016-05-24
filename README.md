@@ -81,7 +81,8 @@ not been collected. We'll do this now:
    > This will setup the default superuser `admin` with the password `admin`.
    > You can alter `initial_setup.py` if you would like a different setting.
 
-3. Collect all the static files to serve in one central folder:
+3. (Optional)Collect all the static files to serve through nginx:
+   > This step is not necessary during normal development, to see the site with static files use port `8000`
 
         docker-compose run -d web python manage.py collectstatic --noinput
 
