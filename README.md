@@ -69,7 +69,10 @@ not been collected. We'll do this now:
 > (without running the log command), you can do run the following command:
 >
 > `docker exec adventure-lookup_web_1 <command>`
-
+>
+> For OS X and Linux, you can simply omit the `-d` to see the output as the
+> command is run.
+>
 > The following commands should be run while your containers are up -
 > among other things, the commands need database access to take effect.
 
@@ -84,8 +87,13 @@ not been collected. We'll do this now:
    > This will setup the default superuser `admin` with the password `admin`.
    > You can alter `initial_setup.py` if you would like a different setting.
 
-3. Collect all the static files to serve through nginx:
+3. (Optional) Collect all the static files to serve through nginx:
+
+   > If you are just using gunicorn directly at :8000, this is not necessary.
+   > However, if you are accessing the site through nginx at :80, it will need
+   > this command to serve static files.
 
         docker-compose run --rm -d web python manage.py collectstatic --noinput
 
-Once all of this is done, you should be up and running.
+Once all of this is done, you should be up and running. To see the site, go
+to the `dev` machine IP at port 8000 (or port 80 to test through nginx).

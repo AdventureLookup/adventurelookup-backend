@@ -7,7 +7,7 @@ services:
       - postgres:postgres
     volumes:
       - ./web/:/app
-      - ./web/static:/app/static
+      - static:/app/static
     env_file: .env
 
   nginx:
@@ -17,9 +17,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
+      - static:/www/static:ro
       - ./nginx/adventurelookup.conf:/etc/nginx/conf.d/adventurelookup.conf:ro
-    volumes_from:
-      - web
     links:
       - web:web
 
