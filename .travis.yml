@@ -18,5 +18,14 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
 
+install:
+  - docker-compose run web pip install -r requirements.txt
+  - pip install codecov
+
 script:
-  - docker-compose -f docker-compose.yml up -d 
+  - docker-compose -f docker-compose.yml build
+  - docker-compose -f docker-compose.yml up -d
+  - docker-compose run web py.test --cov=adventures --cov-report=xml
+
+after_success:
+  - codecov

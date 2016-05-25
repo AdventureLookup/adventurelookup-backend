@@ -1,6 +1,6 @@
 # adventurelookup
 
-[![Build Status](https://travis-ci.org/AdventureLookup/adventurelookup-backend.svg?branch=master)](https://travis-ci.org/AdventureLookup/adventurelookup-backend)
+[![Build Status](https://travis-ci.org/AdventureLookup/adventurelookup-backend.svg?branch=master)](https://travis-ci.org/AdventureLookup/adventurelookup-backend) [![codecov](https://codecov.io/gh/probably-not-a-cat/adventurelookup-backend/branch/master/graph/badge.svg)](https://codecov.io/gh/probably-not-a-cat/adventurelookup-backend)
 
 A searchable tool, AdventureLookup.com, that will allow Dungeon Masters to find the adventure they're looking for.
 
