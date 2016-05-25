@@ -37,7 +37,11 @@ Once you have the tools installed follow these steps:
         // OS X / Linux
         eval $(docker-machine env dev)
 
-3. Start the containers:
+3. Build the containers:
+
+        docker-compose -f docker-compose.yml -f dev.yml build
+
+4. Start the containers:
 
         docker-compose -f docker-compose.yml -f dev.yml up -d
 
@@ -45,18 +49,17 @@ Once you have the tools installed follow these steps:
    > run it in the foreground (handy to get direct log output), omit the -d
    > To get log output otherwise, run `docker-compose logs`
 
-4. To stop the containers, run:
-
-        docker-compose down
-
-5. To visit the site, find the virtual machine IP and enter it in your browser:
-
-        docker-machine ip dev
-
-        // -> Go to the output IP address in your browser
-
 You now have the base setup up and running. The application will auto-reload
 when code changes, so you can see your changes live.
+
+To check that everything is running smoothly, you can run `docker-compose ps`
+and your output should look similar to this:
+
+    Name                         Command               State                    Ports
+    --------------------------------------------------------------------------------------------------------------
+    adventurelookup_nginx_1      nginx -g daemon off;             Up      0.0.0.0:443->443/tcp, 0.0.0.0:80->80/tcp
+    adventurelookup_postgres_1   /docker-entrypoint.sh postgres   Up      0.0.0.0:5432->5432/tcp
+    adventurelookup_web_1        /usr/local/bin/gunicorn ad ...   Up      0.0.0.0:8000->8000/tcp
 
 However, no database tables or content has been setup and the static files have
 not been collected. We'll do this now:
@@ -66,23 +69,31 @@ not been collected. We'll do this now:
 > (without running the log command), you can do run the following command:
 >
 > `docker exec adventure-lookup_web_1 <command>`
-
-> On OS X/Linux it is recommended to change the `-d` option to `--rm`.
-> It'll output the logs to stdout and remove the one-off containers after executing the commands to avoid clutter.
+>
+> For OS X and Linux, you can simply omit the `-d` to see the output as the
+> command is run.
+>
+> The following commands should be run while your containers are up -
+> among other things, the commands need database access to take effect.
 
 1. Run migrations to set up the database structure:
 
-        docker-compose run -d web python manage.py migrate
+        docker-compose run --rm -d web python manage.py migrate
 
 2. Add the initial superuser:
 
-        docker-compose run -d web python initial_setup.py
+        docker-compose run --rm -d web python initial_setup.py
 
    > This will setup the default superuser `admin` with the password `admin`.
    > You can alter `initial_setup.py` if you would like a different setting.
 
-3. Collect all the static files to serve in one central folder:
+3. (Optional) Collect all the static files to serve through nginx:
 
-        docker-compose run -d web python manage.py collectstatic --noinput
+   > If you are just using gunicorn directly at :8000, this is not necessary.
+   > However, if you are accessing the site through nginx at :80, it will need
+   > this command to serve static files.
 
-Once all of this is done, you should be up and running.
+        docker-compose run --rm -d web python manage.py collectstatic --noinput
+
+Once all of this is done, you should be up and running. To see the site, go
+to the `dev` machine IP at port 8000 (or port 80 to test through nginx).
