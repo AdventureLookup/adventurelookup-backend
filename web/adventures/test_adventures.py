@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.db import connection
 from adventures.models import *
+from adventures.fields import *
 
 class AdventureTestCase(TestCase):
 
