@@ -19,7 +19,6 @@ before_install:
   - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
 
 install:
-  - docker-compose run web pip install -r requirements.txt
   - pip install codecov
 
 script:
