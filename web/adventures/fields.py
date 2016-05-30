@@ -6,7 +6,7 @@ def parse_URL_list_field(url_list, separator):
         return []
     return url_list.split(",")
 
-class URLListField(models.URLField):
+class URLListField(models.Field):
     __metaclass__ = models.SubfieldBase
     description = "Stores a python list of URLs"
 
