@@ -66,8 +66,8 @@ class AdventureByIdTestCase(TestCase):
         self.client = Client()
 
     def test_adventure_by_id_get_success(self):
-        Adventure.objects.create(name="LMoP", links=["www.google.com", "another.website.io"])
-        lmop = self.client.get('/adventures/adventure/1')
+        test_adv = Adventure.objects.create(name="LMoP", links=["www.google.com", "another.website.io"])
+        lmop = self.client.get('/adventures/adventure/{}'.format(test_adv.id))
         actual_data = json.loads(lmop.content.decode('utf-8'))
         correct_data = {'name': 'LMoP',
                         'id': 1,
