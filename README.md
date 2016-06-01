@@ -80,9 +80,9 @@ not been collected. We'll do this now:
 
         docker-compose run --rm -d web python manage.py migrate
 
-2. Add the initial superuser:
+2. Add the initial superuser with admin:admin credentials:
 
-        docker-compose run --rm -d web python initial_setup.py
+        docker-compose run --rm -d web python manage.py createadmin
 
    > This will setup the default superuser `admin` with the password `admin`.
    > You can alter `initial_setup.py` if you would like a different setting.
