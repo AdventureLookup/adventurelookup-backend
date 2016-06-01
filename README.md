@@ -68,7 +68,7 @@ not been collected. We'll do this now:
 > mandated by the `-d` flag. If you want to see the output of your commands
 > (without running the log command), you can do run the following command:
 >
-> `docker exec adventure-lookup_web_1 <command>`
+> `docker exec adventurelookup_web_1 <command>`
 >
 > For OS X and Linux, you can simply omit the `-d` to see the output as the
 > command is run.
