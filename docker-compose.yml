@@ -4,7 +4,8 @@ services:
     restart: always
     build: ./web
     links:
-      - postgres:postgres
+      - postgres
+      - memcached
     volumes:
       - ./web/:/app
       - static:/app/static
@@ -13,6 +14,10 @@ services:
       - VIRTUAL_HOST=${BASE_DOMAIN}
       - LETSENCRYPT_HOST=${BASE_DOMAIN}
       - LETSENCRYPT_EMAIL=admin@${BASE_DOMAIN}
+
+  memcached:
+    image: memcached
+    restart: always
 
   nginx:
     image: nginx
