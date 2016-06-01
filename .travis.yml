@@ -24,7 +24,7 @@ install:
 script:
   - docker-compose -f docker-compose.yml build
   - docker-compose -f docker-compose.yml up -d
-  - docker-compose run api sh -c 'until pg_isready -h postgres -d postgres -q; do x=$((x+1)); echo "Waiting for postgres $x second(s)"; sleep $x; done; py.test --cov=adventures --cov-report=xml'
+  - docker-compose run --rm api sh -c 'until pg_isready -h postgres -d postgres -q; do x=$((x+1)); echo "Waiting for postgres $x second(s)"; sleep $x; done; py.test --cov=adventures --cov-report=xml; exit $?'
 
 after_success:
   - codecov
