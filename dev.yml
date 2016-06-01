@@ -1,6 +1,6 @@
 version: "2"
 services:
-  web:
+  api:
     ports:
       - "8000:8000"
     environment:
@@ -12,6 +12,10 @@ services:
       - postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
+  letsencrypt:
+    environment:
+      - LETSENCRYPT_TEST=true
 
 volumes:
   postgres:

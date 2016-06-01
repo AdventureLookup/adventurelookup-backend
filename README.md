@@ -59,7 +59,7 @@ and your output should look similar to this:
     --------------------------------------------------------------------------------------------------------------
     adventurelookup_nginx_1      nginx -g daemon off;             Up      0.0.0.0:443->443/tcp, 0.0.0.0:80->80/tcp
     adventurelookup_postgres_1   /docker-entrypoint.sh postgres   Up      0.0.0.0:5432->5432/tcp
-    adventurelookup_web_1        /usr/local/bin/gunicorn ad ...   Up      0.0.0.0:8000->8000/tcp
+    adventurelookup_api_1        /usr/local/bin/gunicorn ad ...   Up      0.0.0.0:8000->8000/tcp
 
 However, no database tables or content has been setup and the static files have
 not been collected. We'll do this now:
@@ -68,7 +68,7 @@ not been collected. We'll do this now:
 > mandated by the `-d` flag. If you want to see the output of your commands
 > (without running the log command), you can do run the following command:
 >
-> `docker exec adventurelookup_web_1 <command>`
+> `docker exec adventurelookup_api_1 <command>`
 >
 > For OS X and Linux, you can simply omit the `-d` to see the output as the
 > command is run.
@@ -78,11 +78,11 @@ not been collected. We'll do this now:
 
 1. Run migrations to set up the database structure:
 
-        docker-compose run --rm -d web python manage.py migrate
+        docker-compose run --rm -d api python manage.py migrate
 
 2. Add the initial superuser with admin:admin credentials:
 
-        docker-compose run --rm -d web python manage.py createadmin
+        docker-compose run --rm -d api python manage.py createadmin
 
    > This will setup the default superuser `admin` with the password `admin`.
    > You can alter `initial_setup.py` if you would like a different setting.
@@ -93,7 +93,7 @@ not been collected. We'll do this now:
    > However, if you are accessing the site through nginx at :80, it will need
    > this command to serve static files.
 
-        docker-compose run --rm -d web python manage.py collectstatic --noinput
+        docker-compose run --rm -d api python manage.py collectstatic --noinput
 
 Once all of this is done, you should be up and running. To see the site, go
 to the `dev` machine IP at port 8000 (or port 80 to test through nginx).

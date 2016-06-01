@@ -87,3 +87,6 @@ ENV/
 
 # Sublime settings
 *.sublime-*
+
+# Data directory
+data/
