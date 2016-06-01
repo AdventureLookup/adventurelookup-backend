@@ -24,7 +24,7 @@ install:
 script:
   - docker-compose -f docker-compose.yml build
   - docker-compose -f docker-compose.yml up -d
-  - docker-compose run web py.test --cov=adventures --cov-report=xml
+  - docker-compose run api py.test --cov=adventures --cov-report=xml
 
 after_success:
   - codecov
