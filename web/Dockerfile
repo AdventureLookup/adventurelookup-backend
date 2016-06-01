@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 		gcc \
 		gettext \
 		postgresql-client libpq-dev \
-		libmemcached-dev \
 	&& apt-get clean
 
 VOLUME /app

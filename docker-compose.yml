@@ -5,7 +5,7 @@ services:
     build: ./web
     links:
       - postgres
-      - memcached
+      - redis
     volumes:
       - ./web/:/app
       - static:/app/static
@@ -15,9 +15,11 @@ services:
       - LETSENCRYPT_HOST=${BASE_DOMAIN}
       - LETSENCRYPT_EMAIL=admin@${BASE_DOMAIN}
 
-  memcached:
-    image: memcached
+  redis:
+    image: redis
     restart: always
+    volumes:
+      - $DATA_DIR/redis:/data
 
   nginx:
     image: nginx
@@ -27,7 +29,7 @@ services:
       - /etc/nginx/vhost.d
       - static:/usr/share/nginx/html
       - ./nginx/static.conf:/etc/nginx/vhost.d/default:ro
-      - ./certs:/etc/nginx/certs:ro
+      - $DATA_DIR/certs:/etc/nginx/certs:ro
     ports:
       - "80:80"
       - "443:443"
@@ -48,7 +50,7 @@ services:
     volumes_from:
       - nginx
     volumes:
-      - ./data/certs:/etc/nginx/certs:rw
+      - $DATA_DIR/certs:/etc/nginx/certs:rw
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - NGINX_DOCKER_GEN_CONTAINER=${COMPOSE_PROJECT_NAME}_nginx_gen_1
