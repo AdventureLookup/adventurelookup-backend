@@ -83,10 +83,6 @@ class AdventureByIdTestCase(TestCase):
         notfound = self.client.get(reverse('adventures:adventure-by-id', args=(100,)))
         self.assertEqual(notfound.status_code, 404)
 
-    def test_adventure_by_id_get_400(self):
-        invalid = self.client.get(reverse('adventures:adventure-by-id', args=('notaninteger',)))
-        self.assertEqual(invalid.status_code, 400)
-
     def test_adventure_by_id_get_put(self):
         put = self.client.put(reverse('adventures:adventure-by-id', args=(self.test_adv.id,)))
         self.assertEqual(put.status_code, 405)
