@@ -66,7 +66,10 @@ class AdventureByIdTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.client = Client()
-        cls.test_adv = Adventure.objects.create(name="LMoP", links=["www.google.com", "another.website.io"])
+        cls.test_data = {'name': 'LMoP',
+                         'links': ["www.google.com", "another.website.io"]
+                         }
+        cls.test_adv = Adventure.objects.create(**cls.test_data)
 
     def test_adventure_by_id_get_success(self):
         lmop = self.client.get(reverse('adventures:adventure-by-id', args=(self.test_adv.id,)))
