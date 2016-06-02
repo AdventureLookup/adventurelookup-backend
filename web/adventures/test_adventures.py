@@ -71,13 +71,11 @@ class AdventureByIdTestCase(TestCase):
     def test_adventure_by_id_get_success(self):
         lmop = self.client.get(reverse('adventures:adventure-by-id', args=(self.test_adv.id,)))
         actual_data = json.loads(lmop.content.decode('utf-8'))
-        correct_data = {'name': 'LMoP',
-                        'id': 1,
-                        'links': ["www.google.com", "another.website.io"],
-                        'authors': [],
-                        'description': ''
-                        }
-        self.assertEqual(actual_data, correct_data)
+        self.assertEqual(actual_data['name'], self.test_adv.name)
+        self.assertEqual(actual_data['id'], self.test_adv.id)
+        self.assertEqual(actual_data['links'], self.test_adv.links)
+        self.assertEqual(actual_data['authors'], [])
+        self.assertEqual(actual_data['description'], self.test_adv.description)
 
     def test_adventure_by_id_get_404(self):
         notfound = self.client.get(reverse('adventures:adventure-by-id', args=(100,)))
