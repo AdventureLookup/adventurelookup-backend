@@ -1,6 +1,7 @@
 import json
 from django.test import TestCase, Client
 from django.db import connection
+from django.core.urlresolvers import reverse
 from adventures.models import *
 from adventures.fields import *
 
@@ -68,7 +69,7 @@ class AdventureByIdTestCase(TestCase):
         cls.test_adv = Adventure.objects.create(name="LMoP", links=["www.google.com", "another.website.io"])
 
     def test_adventure_by_id_get_success(self):
-        lmop = self.client.get('/adventures/adventure/{}'.format(self.test_adv.id))
+        lmop = self.client.get(reverse('adventures:adventure-by-id', args=(self.test_adv.id,)))
         actual_data = json.loads(lmop.content.decode('utf-8'))
         correct_data = {'name': 'LMoP',
                         'id': 1,
@@ -79,13 +80,13 @@ class AdventureByIdTestCase(TestCase):
         self.assertEqual(actual_data, correct_data)
 
     def test_adventure_by_id_get_404(self):
-        notfound = self.client.get('/adventures/adventure/15')
+        notfound = self.client.get(reverse('adventures:adventure-by-id', args=(100,)))
         self.assertEqual(notfound.status_code, 404)
 
     def test_adventure_by_id_get_400(self):
-        invalid = self.client.get('/adventures/adventure/notaninteger')
+        invalid = self.client.get(reverse('adventures:adventure-by-id', args=('notaninteger',)))
         self.assertEqual(invalid.status_code, 400)
 
     def test_adventure_by_id_get_put(self):
-        put = self.client.put('/adventures/adventure/1')
+        put = self.client.put(reverse('adventures:adventure-by-id', args=(self.test_adv.id,)))
         self.assertEqual(put.status_code, 405)
