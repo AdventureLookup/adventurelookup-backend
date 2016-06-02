@@ -1,15 +1,17 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
+from django.views.generic import View
 from . import models
 
 
-def adventure_by_id(request, adventure_id):
-    # This endpoint only handles information retrieval, so only GET
-    # requests are allowed. Respond with 'METHOD NOT ALLOWED'.
-    if request.method != 'GET':
-        return HttpResponse(status=405)
+class AdventureById(View):
 
-    adventure = get_object_or_404(models.Adventure, pk=adventure_id)
-    data = model_to_dict(adventure)
-    return JsonResponse(data)
+    def dispatch(self, request, *args, **kwargs):
+        self.adventure_id = kwargs.get('adventure_id')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        adventure = get_object_or_404(models.Adventure, pk=self.adventure_id)
+        data = model_to_dict(adventure)
+        return JsonResponse(data)
