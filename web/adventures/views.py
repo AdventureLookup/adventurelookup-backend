@@ -8,10 +8,10 @@ from . import models
 class AdventureById(View):
 
     def dispatch(self, request, *args, **kwargs):
-        self.adventure_id = kwargs.get('adventure_id')
+        adventure_id = kwargs.get('adventure_id')
+        self.adventure = get_object_or_404(models.Adventure, pk=adventure_id)
         return super().dispatch(request)
 
     def get(self, request):
-        adventure = get_object_or_404(models.Adventure, pk=self.adventure_id)
-        data = model_to_dict(adventure)
+        data = model_to_dict(self.adventure)
         return JsonResponse(data)
