@@ -9,9 +9,9 @@ class AdventureById(View):
 
     def dispatch(self, request, *args, **kwargs):
         self.adventure_id = kwargs.get('adventure_id')
-        return super().dispatch(request, *args, **kwargs)
+        return super().dispatch(request)
 
-    def get(self, *args, **kwargs):
+    def get(self, request):
         adventure = get_object_or_404(models.Adventure, pk=self.adventure_id)
         data = model_to_dict(adventure)
         return JsonResponse(data)
