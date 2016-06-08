@@ -8,12 +8,30 @@ services:
       - redis
     volumes:
       - ./web/:/app
-      - static:/app/static
+      - static:/www
     env_file: .env
     environment:
-      - VIRTUAL_HOST=${BASE_DOMAIN}
-      - LETSENCRYPT_HOST=${BASE_DOMAIN}
+      - VIRTUAL_HOST=api.${BASE_DOMAIN}
+      - LETSENCRYPT_HOST=api.${BASE_DOMAIN}
       - LETSENCRYPT_EMAIL=admin@${BASE_DOMAIN}
+
+  setup:
+    restart: on-failure
+    build: ./web
+    links:
+      - postgres
+      - redis
+    volumes:
+      - ./web/:/app
+      - static:/www
+    env_file: .env
+    command: sh -c "python manage.py migrate; python manage.py collectstatic --noinput"
+
+  frontend:
+    restart: on-failure
+    build: ./frontend
+    volumes:
+      - static:/src/dist
 
   redis:
     image: redis
@@ -29,10 +47,15 @@ services:
       - /etc/nginx/vhost.d
       - static:/usr/share/nginx/html
       - ./nginx/static.conf:/etc/nginx/vhost.d/default:ro
+      - ./nginx/frontend.conf:/etc/nginx/vhost.d/${BASE_DOMAIN}:ro
       - $DATA_DIR/certs:/etc/nginx/certs:ro
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      - VIRTUAL_HOST=${BASE_DOMAIN}
+      - LETSENCRYPT_HOST=${BASE_DOMAIN}
+      - LETSENCRYPT_EMAIL=admin@${BASE_DOMAIN}
 
   nginx_gen:
     image: jwilder/docker-gen

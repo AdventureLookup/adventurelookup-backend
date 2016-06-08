@@ -162,6 +162,9 @@ server {
 	{{ end }}
 
 	location / {
+		try_files $uri $uri/ @proxy;
+	}
+	location @proxy {
 		proxy_pass {{ trim $proto }}://{{ trim $host }};
 		{{ if (exists (printf "/etc/nginx/htpasswd/%s" $host)) }}
 		auth_basic	"Restricted {{ $host }}";
@@ -191,6 +194,9 @@ server {
 	{{ end }}
 
 	location / {
+		try_files $uri $uri/ @proxy;
+	}
+	location @proxy {
 		proxy_pass {{ trim $proto }}://{{ trim $host }};
 		{{ if (exists (printf "/etc/nginx/htpasswd/%s" $host)) }}
 		auth_basic	"Restricted {{ $host }}";

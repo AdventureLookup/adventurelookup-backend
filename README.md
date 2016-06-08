@@ -21,6 +21,8 @@ on a native Linux platform, you can download the two tools individually
 ## Env
 There is an `.env` file where you can tweak the settings for the project. (Recommended for production)
 
+> If you're using a different IP than `127.0.0.1` to access the site make sure to modify the `BASE_DOMAIN` in `.env` file.
+
 Once you have the tools installed follow these steps:
 
 1. Create a virtual machine to host the containers:
@@ -72,28 +74,12 @@ not been collected. We'll do this now:
 >
 > For OS X and Linux, you can simply omit the `-d` to see the output as the
 > command is run.
->
-> The following commands should be run while your containers are up -
-> among other things, the commands need database access to take effect.
 
-1. Run migrations to set up the database structure:
-
-        docker-compose run --rm -d api python manage.py migrate
-
-2. Add the initial superuser with admin:admin credentials:
+### Add the initial superuser account:
 
         docker-compose run --rm -d api python manage.py createadmin
 
    > This will setup the default superuser `admin` with the password `admin`.
-   > You can alter `initial_setup.py` if you would like a different setting.
-
-3. (Optional) Collect all the static files to serve through nginx:
-
-   > If you are just using gunicorn directly at :8000, this is not necessary.
-   > However, if you are accessing the site through nginx at :80, it will need
-   > this command to serve static files.
-
-        docker-compose run --rm -d api python manage.py collectstatic --noinput
 
 Once all of this is done, you should be up and running. To see the site, go
 to the `dev` machine IP at port 8000 (or port 80 to test through nginx).
