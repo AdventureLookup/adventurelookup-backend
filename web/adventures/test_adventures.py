@@ -1,5 +1,7 @@
-from django.test import TestCase
+import json
+from django.test import TestCase, Client
 from django.db import connection
+from django.core.urlresolvers import reverse
 from adventures.models import *
 from adventures.fields import *
 
@@ -57,3 +59,31 @@ class URLListFieldTestCase(TestCase):
         """Test URLListField's to_python with none"""
         url_list = URLListField()
         self.assertEqual(url_list.get_prep_value(["www.google.com", "another.website.io"]), "www.google.com,another.website.io")
+
+
+class AdventureByIdTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.client = Client()
+        cls.test_data = {'name': 'LMoP',
+                         'links': ["www.google.com", "another.website.io"]
+                         }
+        cls.test_adv = Adventure.objects.create(**cls.test_data)
+
+    def test_adventure_by_id_get_success(self):
+        lmop = self.client.get(reverse('adventures:adventure-by-id', args=(self.test_adv.id,)))
+        actual_data = json.loads(lmop.content.decode('utf-8'))
+        self.assertEqual(actual_data['name'], self.test_adv.name)
+        self.assertEqual(actual_data['id'], self.test_adv.id)
+        self.assertEqual(actual_data['links'], self.test_adv.links)
+        self.assertEqual(actual_data['authors'], [])
+        self.assertEqual(actual_data['description'], self.test_adv.description)
+
+    def test_adventure_by_id_get_404(self):
+        notfound = self.client.get(reverse('adventures:adventure-by-id', args=(100,)))
+        self.assertEqual(notfound.status_code, 404)
+
+    def test_adventure_by_id_get_put(self):
+        put = self.client.put(reverse('adventures:adventure-by-id', args=(self.test_adv.id,)))
+        self.assertEqual(put.status_code, 405)
