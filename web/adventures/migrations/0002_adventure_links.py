@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import adventures.models
+
 from django.db import migrations
 
 

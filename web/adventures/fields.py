@@ -1,10 +1,12 @@
 from django.db import models
 
+
 def parse_URL_list_field(url_list, separator):
     """Takes a string of urls and coverts them into a list."""
     if url_list == "":
         return []
     return url_list.split(",")
+
 
 class URLListField(models.Field):
     __metaclass__ = models.SubfieldBase
