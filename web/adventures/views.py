@@ -22,7 +22,8 @@ class AdventureById(View):
         new_data = json.loads(request.body.decode('utf-8'))
         adventure_qset = models.Adventure.objects.filter(pk=self.adventure_id)
         if not adventure_qset:
-            return JsonResponse({}, status=404,
+            return JsonResponse({},
+                                status=404,
                                 reason='No Adventure matches the given query.')
         adventure_qset.update(**new_data)
         adventure_data = model_to_dict(adventure_qset[0])

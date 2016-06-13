@@ -95,18 +95,25 @@ class AdventureByIdTestCase(TestCase):
         self.assertEqual(notfound.status_code, 404)
 
     def test_adventure_by_id_put_success(self):
-        self.client.put(reverse('adventures:adventure-by-id', args=(self.test_adv.id, )),
-                        data=json.dumps(self.put_test_data), content_type='application/json')
-        get = self.client.get(reverse('adventures:adventure-by-id', args=(self.test_adv.id, )))
+        self.client.put(
+            reverse('adventures:adventure-by-id',
+                    args=(self.test_adv.id, )),
+            data=json.dumps(self.put_test_data),
+            content_type='application/json')
+        get = self.client.get(reverse('adventures:adventure-by-id',
+                                      args=(self.test_adv.id, )))
         get_data = json.loads(get.content.decode('utf-8'))
         self.assertEqual(get_data['name'], self.put_test_data['name'])
         self.assertEqual(get_data['id'], self.test_adv.id)
         self.assertEqual(get_data['links'], self.test_adv.links)
         self.assertEqual(get_data['authors'], [])
-        self.assertEqual(get_data['description'], self.put_test_data['description'])
+        self.assertEqual(get_data['description'],
+                         self.put_test_data['description'])
 
     def test_adventure_by_id_put_404(self):
-        put = self.client.put(reverse('adventures:adventure-by-id', args=(self.test_adv.id+1, )),
-                              data=json.dumps(self.put_test_data), content_type='application/json')
+        put = self.client.put(
+            reverse('adventures:adventure-by-id',
+                    args=(self.test_adv.id + 1, )),
+            data=json.dumps(self.put_test_data),
+            content_type='application/json')
         self.assertEqual(put.status_code, 404)
-
