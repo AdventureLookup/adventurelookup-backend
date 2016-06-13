@@ -20,7 +20,6 @@ class AdventureById(View):
 
     def put(self, request):
         new_data = json.loads(request.body.decode('utf-8'))
-
         adventure_qset = models.Adventure.objects.filter(pk=self.adventure_id)
         if not adventure_qset:
             return JsonResponse({}, status=404,
