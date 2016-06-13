@@ -3,9 +3,15 @@ services:
   api:
     ports:
       - "8000:8000"
+    volumes:
+      - ./web/:/app
     environment:
       - DEBUG=True
     command: /usr/local/bin/gunicorn adventurelookup.wsgi:application --workers 2 --forwarded-allow-ips="*" --bind 0.0.0.0:8000 --reload
+
+  frontend:
+    volumes:
+      - ${FRONTEND_REPO_DIR}:/src/dist
 
   postgres:
     volumes:

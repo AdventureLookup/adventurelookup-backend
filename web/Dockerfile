@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 VOLUME /app
 WORKDIR /app
 
-COPY requirements.txt ./
+COPY . ./
 RUN pip install gunicorn && pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8000
