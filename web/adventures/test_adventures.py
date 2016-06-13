@@ -73,6 +73,7 @@ class AdventureByIdTestCase(TestCase):
         cls.client = Client()
         cls.test_data = {'name': 'LMoP', 'links': ["www.google.com", "another.website.io"]}
         cls.test_adv = Adventure.objects.create(**cls.test_data)
+        cls.put_test_data = {'name': 'Rage of Demons', 'description': 'test'}
 
     def test_adventure_by_id_get_success(self):
         lmop = self.client.get(reverse('adventures:adventure-by-id', args=(self.test_adv.id, )))
@@ -87,6 +88,18 @@ class AdventureByIdTestCase(TestCase):
         notfound = self.client.get(reverse('adventures:adventure-by-id', args=(100, )))
         self.assertEqual(notfound.status_code, 404)
 
-    def test_adventure_by_id_get_put(self):
-        put = self.client.put(reverse('adventures:adventure-by-id', args=(self.test_adv.id, )))
-        self.assertEqual(put.status_code, 405)
+    def test_adventure_by_id_put_success(self):
+        self.client.put(reverse('adventures:adventure-by-id', args=(self.test_adv.id, )),
+                        data=json.dumps(self.put_test_data), content_type='application/json')
+        get = self.client.get(reverse('adventures:adventure-by-id', args=(self.test_adv.id, )))
+        get_data = json.loads(get.content.decode('utf-8'))
+        self.assertEqual(get_data['name'], self.put_test_data['name'])
+        self.assertEqual(get_data['id'], self.test_adv.id)
+        self.assertEqual(get_data['links'], self.test_adv.links)
+        self.assertEqual(get_data['authors'], [])
+        self.assertEqual(get_data['description'], self.put_test_data['description'])
+
+    def test_adventure_by_id_put_404(self):
+        put = self.client.put(reverse('adventures:adventure-by-id', args=(self.test_adv.id+1, )),
+                              data=json.dumps(self.put_test_data), content_type='application/json')
+        self.assertEqual(put.status_code, 404)
