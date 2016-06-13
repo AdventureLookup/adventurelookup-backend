@@ -24,7 +24,9 @@ class AuthorTestCase(TestCase):
 
 class URLListFieldTestCase(TestCase):
     def setUp(self):
-        Adventure.objects.create(name="LMoP", links=["www.google.com", "another.website.io"])
+        Adventure.objects.create(
+            name="LMoP",
+            links=["www.google.com", "another.website.io"])
         Adventure.objects.create(name="HotDQ")
 
     def test_URLListField_db_type(self):
@@ -45,7 +47,8 @@ class URLListFieldTestCase(TestCase):
     def test_URLListField_from_db_value_with_links(self):
         """Test URLListField's from_db_value with links"""
         adventure = Adventure.objects.get(name="LMoP")
-        self.assertEqual(adventure.links, ["www.google.com", "another.website.io"])
+        self.assertEqual(adventure.links,
+                         ["www.google.com", "another.website.io"])
 
     def test_URLListField_to_python_none(self):
         """Test URLListField's to_python with none"""
@@ -56,26 +59,28 @@ class URLListFieldTestCase(TestCase):
         """Test URLListField's to_python with links"""
         url_list = URLListField()
         self.assertEqual(
-            url_list.to_python("www.google.com,another.website.io"), ["www.google.com", "another.website.io"]
-        )
+            url_list.to_python("www.google.com,another.website.io"),
+            ["www.google.com", "another.website.io"])
 
     def test_URLListField_get_prep_value(self):
         """Test URLListField's to_python with none"""
         url_list = URLListField()
         self.assertEqual(
-            url_list.get_prep_value(["www.google.com", "another.website.io"]), "www.google.com,another.website.io"
-        )
+            url_list.get_prep_value(["www.google.com", "another.website.io"]),
+            "www.google.com,another.website.io")
 
 
 class AdventureByIdTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.client = Client()
-        cls.test_data = {'name': 'LMoP', 'links': ["www.google.com", "another.website.io"]}
+        cls.test_data = {'name': 'LMoP',
+                         'links': ["www.google.com", "another.website.io"]}
         cls.test_adv = Adventure.objects.create(**cls.test_data)
 
     def test_adventure_by_id_get_success(self):
-        lmop = self.client.get(reverse('adventures:adventure-by-id', args=(self.test_adv.id, )))
+        lmop = self.client.get(reverse('adventures:adventure-by-id',
+                                       args=(self.test_adv.id, )))
         actual_data = json.loads(lmop.content.decode('utf-8'))
         self.assertEqual(actual_data['name'], self.test_adv.name)
         self.assertEqual(actual_data['id'], self.test_adv.id)
@@ -84,9 +89,31 @@ class AdventureByIdTestCase(TestCase):
         self.assertEqual(actual_data['description'], self.test_adv.description)
 
     def test_adventure_by_id_get_404(self):
-        notfound = self.client.get(reverse('adventures:adventure-by-id', args=(100, )))
+        notfound = self.client.get(reverse('adventures:adventure-by-id',
+                                           args=(100, )))
         self.assertEqual(notfound.status_code, 404)
 
-    def test_adventure_by_id_get_put(self):
-        put = self.client.put(reverse('adventures:adventure-by-id', args=(self.test_adv.id, )))
-        self.assertEqual(put.status_code, 405)
+    def test_adventure_by_id_put_success(self):
+        new_data = '{"name": "Rage of Demons", "description": "test"})'
+        self.client.put(
+            reverse('adventures:adventure-by-id',
+                    args=(self.test_adv.id, )),
+            data=new_data,
+            content_type='application/json')
+        get = self.client.get(reverse('adventures:adventure-by-id',
+                                      args=(self.test_adv.id, )))
+        get_data = json.loads(get.content.decode('utf-8'))
+        self.assertEqual(get_data['name'], "Rage of Demons")
+        self.assertEqual(get_data['id'], self.test_adv.id)
+        self.assertEqual(get_data['links'], self.test_adv.links)
+        self.assertEqual(get_data['authors'], [])
+        self.assertEqual(get_data['description'], "test")
+
+    def test_adventure_by_id_put_404(self):
+        new_data = '{"name": "Non-existent Adventure"})'
+        notfound = self.client.put(
+            reverse('adventures:adventure-by-id',
+                    args=(100, )),
+            data=new_data,
+            content_type='application/json')
+        self.assertEqual(notfound.status_code, 404)
