@@ -94,7 +94,7 @@ class AdventureByIdTestCase(TestCase):
         self.assertEqual(notfound.status_code, 404)
 
     def test_adventure_by_id_put_success(self):
-        new_data = '{"name": "Rage of Demons", "description": "test"})'
+        new_data = '{"name": "Rage of Demons", "description": "test"}'
         self.client.put(
             reverse('adventures:adventure-by-id',
                     args=(self.test_adv.id, )),
